@@ -1,0 +1,16 @@
+{
+  "name": "odontograma-web",
+  "version": "1.0.0",
+  "description": "Odontograma geométrico interactivo para autorizaciones de obra social",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["odontograma", "dental", "obra social", "argentina"],
+  "author": "Odontograma Web",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

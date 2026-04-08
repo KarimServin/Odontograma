@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Odontograma Digital — Sistema de Autorizaciones de Obra Social</title>
+  <meta name="description" content="Portal odontológico para registro de tratamientos y solicitud de autorizaciones a obras sociales. Sistema FDI/ISO 3950." />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="16" cy="16" r="15" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M10 12 C10 8 22 8 22 12 C22 16 20 20 16 24 C12 20 10 16 10 12Z" fill="currentColor" opacity="0.3"/>
+          <path d="M10 12 C10 8 22 8 22 12 C22 16 20 20 16 24 C12 20 10 16 10 12Z" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="16" y1="8" x2="16" y2="24" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+          <line x1="10.5" y1="13" x2="21.5" y2="13" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">OdontoChart</span>
+        <span class="brand-version">Obra Social v1.0</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item active" id="nav-odontograma" onclick="showView('odontograma')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        <span>Odontograma</span>
+      </a>
+      <a href="#" class="nav-item" id="nav-autorizaciones" onclick="showView('autorizaciones')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        <span>Autorizaciones</span>
+      </a>
+      <a href="#" class="nav-item" id="nav-pacientes" onclick="showView('pacientes')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        <span>Pacientes</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar">Dr</div>
+        <div class="user-details">
+          <span class="user-name">Odontólogo</span>
+          <span class="user-role">Profesional</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN LAYOUT -->
+  <div class="main-layout">
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="topbar-title">
+        <h1 id="viewTitle">Odontograma Clínico</h1>
+        <span id="viewSubtitle">Sistema FDI/ISO 3950 — Marcado de tratamientos por cara dental</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-ghost" id="btnLimpiarTodo" onclick="confirmarLimpiar()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+          Limpiar
+        </button>
+        <button class="btn btn-primary" id="btnGuardar" onclick="abrirModalGuardar()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Guardar Autorización
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <main class="content">
+
+      <!-- ═══════════ VIEW: ODONTOGRAMA ═══════════ -->
+      <div id="view-odontograma" class="view active">
+
+        <!-- Datos del paciente -->
+        <section class="card patient-card">
+          <h2 class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            Datos del Paciente
+          </h2>
+          <div class="patient-grid">
+            <div class="field-group">
+              <label for="pacienteNombre">Apellido y Nombre</label>
+              <input type="text" id="pacienteNombre" placeholder="Ej: García, Juan Manuel" />
+            </div>
+            <div class="field-group">
+              <label for="pacienteDni">DNI / Matrícula</label>
+              <input type="text" id="pacienteDni" placeholder="Ej: 28.345.678" />
+            </div>
+            <div class="field-group">
+              <label for="pacienteOS">Obra Social</label>
+              <select id="pacienteOS">
+                <option value="">— Seleccionar —</option>
+                <option value="OSDE">OSDE</option>
+                <option value="IOMA">IOMA</option>
+                <option value="PAMI">PAMI</option>
+                <option value="Swiss Medical">Swiss Medical</option>
+                <option value="Galeno">Galeno</option>
+                <option value="Medifé">Medifé</option>
+                <option value="OSPe">OSPe (Empleados Públicos)</option>
+                <option value="OSPAT">OSPAT</option>
+                <option value="Sancor Salud">Sancor Salud</option>
+                <option value="Otra">Otra</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label for="pacienteNroAfiliado">N° Afiliado</label>
+              <input type="text" id="pacienteNroAfiliado" placeholder="Ej: 1-123456789-00" />
+            </div>
+            <div class="field-group">
+              <label for="pacienteFecha">Fecha</label>
+              <input type="date" id="pacienteFecha" />
+            </div>
+            <div class="field-group">
+              <label for="pacientePlan">Plan</label>
+              <input type="text" id="pacientePlan" placeholder="Ej: 310 · 210 · etc." />
+            </div>
+          </div>
+        </section>
+
+        <!-- Herramientas de tratamiento -->
+        <section class="card tools-card">
+          <h2 class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+            Tratamientos / Herramientas
+          </h2>
+          <div class="tools-container">
+            <div class="tool-group">
+              <span class="tool-group-label">Diagnóstico</span>
+              <div class="tools-row">
+                <button class="tool-btn active" id="tool-caries" onclick="selectTool('caries')" title="Caries – marcar cara afectada">
+                  <div class="tool-color" style="background:#ef4444"></div>
+                  <span>Caries</span>
+                </button>
+                <button class="tool-btn" id="tool-obturacion" onclick="selectTool('obturacion')" title="Obturación existente (amalgama/resina)">
+                  <div class="tool-color" style="background:#3b82f6"></div>
+                  <span>Obturación</span>
+                </button>
+                <button class="tool-btn" id="tool-fractura" onclick="selectTool('fractura')" title="Fractura coronaria">
+                  <div class="tool-color" style="background:#f97316"></div>
+                  <span>Fractura</span>
+                </button>
+              </div>
+            </div>
+            <div class="tool-group">
+              <span class="tool-group-label">Tratamientos Planificados</span>
+              <div class="tools-row">
+                <button class="tool-btn" id="tool-corona" onclick="selectTool('corona')" title="Corona protésica completa">
+                  <div class="tool-color" style="background:#eab308"></div>
+                  <span>Corona</span>
+                </button>
+                <button class="tool-btn" id="tool-endodoncia" onclick="selectTool('endodoncia')" title="Tratamiento de conducto">
+                  <div class="tool-color" style="background:#8b5cf6"></div>
+                  <span>Endodoncia</span>
+                </button>
+                <button class="tool-btn" id="tool-resina" onclick="selectTool('resina')" title="Restauración con resina compuesta">
+                  <div class="tool-color" style="background:#06b6d4"></div>
+                  <span>Resina</span>
+                </button>
+              </div>
+            </div>
+            <div class="tool-group">
+              <span class="tool-group-label">Cirugía / Estado</span>
+              <div class="tools-row">
+                <button class="tool-btn" id="tool-extraccion" onclick="selectTool('extraccion')" title="Extracción planificada">
+                  <div class="tool-color" style="background:#dc2626"></div>
+                  <span>Extracción</span>
+                </button>
+                <button class="tool-btn" id="tool-ausente" onclick="selectTool('ausente')" title="Pieza dentaria ausente (ya extraída)">
+                  <div class="tool-color" style="background:#6b7280"></div>
+                  <span>Ausente</span>
+                </button>
+                <button class="tool-btn" id="tool-implante" onclick="selectTool('implante')" title="Implante oseointegrado">
+                  <div class="tool-color" style="background:#10b981"></div>
+                  <span>Implante</span>
+                </button>
+                <button class="tool-btn" id="tool-sano" onclick="selectTool('sano')" title="Borrar marcado (diente sano)">
+                  <div class="tool-color" style="background:#1e293b;border:1px solid #475569"></div>
+                  <span>Borrar</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Leyenda de colores -->
+          <div class="legend">
+            <span class="legend-title">Leyenda:</span>
+            <div class="legend-items">
+              <span class="legend-item"><em style="background:#ef4444"></em>Caries</span>
+              <span class="legend-item"><em style="background:#3b82f6"></em>Obturación</span>
+              <span class="legend-item"><em style="background:#f97316"></em>Fractura</span>
+              <span class="legend-item"><em style="background:#eab308"></em>Corona</span>
+              <span class="legend-item"><em style="background:#8b5cf6"></em>Endodoncia</span>
+              <span class="legend-item"><em style="background:#06b6d4"></em>Resina</span>
+              <span class="legend-item"><em style="background:#dc2626"></em>Extracción</span>
+              <span class="legend-item"><em style="background:#6b7280"></em>Ausente</span>
+              <span class="legend-item"><em style="background:#10b981"></em>Implante</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Toggle adultos/temporarios -->
+        <div class="dentition-toggle">
+          <button class="toggle-btn active" id="togglePermanente" onclick="switchDentition('permanente')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8 2 4 6 4 10c0 6 8 12 8 12s8-6 8-12c0-4-4-8-8-8z"/></svg>
+            Dentición Permanente (32 piezas)
+          </button>
+          <button class="toggle-btn" id="toggleTemporario" onclick="switchDentition('temporario')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/></svg>
+            Dentición Temporaria (20 piezas)
+          </button>
+        </div>
+
+        <!-- ODONTOGRAMA SVG -->
+        <section class="card odontogram-card">
+          <div class="arch-label arch-label-top">
+            <span class="arch-side">Superior Derecho</span>
+            <svg class="arch-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span class="arch-side">Superior Izquierdo</span>
+          </div>
+
+          <!-- Numeración FDI superior -->
+          <div class="fdi-numbers fdi-top" id="fdiTopNumbers"></div>
+
+          <!-- Arco superior -->
+          <div class="dental-arch arch-top" id="archTop"></div>
+
+          <!-- Separador maxilar/mandibular -->
+          <div class="arch-divider">
+            <span>— Línea Intermaxilar —</span>
+          </div>
+
+          <!-- Arco inferior -->
+          <div class="dental-arch arch-bottom" id="archBottom"></div>
+
+          <!-- Numeración FDI inferior -->
+          <div class="fdi-numbers fdi-bottom" id="fdiBottomNumbers"></div>
+
+          <div class="arch-label arch-label-bottom">
+            <span class="arch-side">Inferior Derecho</span>
+            <svg class="arch-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span class="arch-side">Inferior Izquierdo</span>
+          </div>
+        </section>
+
+        <!-- Observaciones -->
+        <section class="card">
+          <h2 class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            Observaciones Clínicas
+          </h2>
+          <textarea id="observaciones" rows="3" placeholder="Notas clínicas, indicaciones especiales, piezas en duda..."></textarea>
+        </section>
+
+        <!-- Resumen de tratamientos -->
+        <section class="card" id="resumenCard" style="display:none">
+          <h2 class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            Resumen de Tratamientos Solicitados
+          </h2>
+          <div id="resumenContent"></div>
+        </section>
+      </div>
+
+      <!-- ═══════════ VIEW: AUTORIZACIONES ═══════════ -->
+      <div id="view-autorizaciones" class="view">
+        <section class="card">
+          <h2 class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            Autorizaciones Guardadas
+          </h2>
+          <div class="search-bar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="searchInput" placeholder="Buscar por paciente, obra social, DNI..." oninput="filtrarAutorizaciones()" />
+          </div>
+          <div id="listaAutorizaciones" class="autorizaciones-list">
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
+              <p>No hay autorizaciones guardadas</p>
+              <span>Complete el odontograma y guarde una autorización para ver el historial</span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ═══════════ VIEW: PACIENTES ═══════════ -->
+      <div id="view-pacientes" class="view">
+        <section class="card">
+          <h2 class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            Pacientes Registrados
+          </h2>
+          <p style="color:var(--text-secondary); font-size:0.875rem; margin-top:0.5rem;">
+            Los pacientes se registran automáticamente al guardar autorizaciones. Aquí se muestra el historial agrupado por paciente.
+          </p>
+          <div id="listaPacientes" class="pacientes-list"></div>
+        </section>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- TOOLTIP FLOTANTE -->
+  <div id="tooltip" class="tooltip" role="tooltip"></div>
+
+  <!-- MODAL GUARDAR -->
+  <div id="modalGuardar" class="modal-overlay" style="display:none">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Guardar Autorización</h3>
+        <button onclick="cerrarModal('modalGuardar')" class="modal-close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="modalPreview"></div>
+        <div class="field-group">
+          <label for="modalNroPrestacion">N° de Prestación / Código Obra Social</label>
+          <input type="text" id="modalNroPrestacion" placeholder="Ej: 02.15 · 03.01 · etc." />
+        </div>
+        <div class="field-group">
+          <label for="modalEstado">Estado</label>
+          <select id="modalEstado">
+            <option value="pendiente">Pendiente de autorización</option>
+            <option value="autorizada">Autorizada</option>
+            <option value="rechazada">Rechazada</option>
+            <option value="en_proceso">En proceso</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label for="modalNotas">Notas adicionales para la OS</label>
+          <textarea id="modalNotas" rows="2" placeholder="Indicaciones especiales..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="cerrarModal('modalGuardar')">Cancelar</button>
+        <button class="btn btn-primary" onclick="guardarAutorizacion()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/></svg>
+          Confirmar y Guardar
+        </button>
+        <button class="btn btn-secondary" onclick="imprimirOdontograma()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Imprimir
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DETALLE AUTORIZACIÓN -->
+  <div id="modalDetalle" class="modal-overlay" style="display:none">
+    <div class="modal modal-wide">
+      <div class="modal-header">
+        <h3 id="modalDetalleTitle">Detalle de Autorización</h3>
+        <button onclick="cerrarModal('modalDetalle')" class="modal-close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body" id="modalDetalleBody"></div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="cerrarModal('modalDetalle')">Cerrar</button>
+        <button class="btn btn-secondary" id="btnCargarAutorizacion">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 002-2v-4M17 9l-5 5-5-5M12 12.8V2.5"/></svg>
+          Cargar en Odontograma
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATIONS -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="odontograma.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
