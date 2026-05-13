@@ -248,7 +248,7 @@
     _renderArches() {
       const teeth = this._dentition === 'temporario' ? TEMPORARY : PERMANENT;
       const topArr    = [...teeth.topRight, ...teeth.topLeft];
-      const bottomArr = [...teeth.bottomLeft, ...teeth.bottomRight];
+      const bottomArr = [...teeth.bottomRight, ...teeth.bottomLeft];
       const uid = this._uid;
 
       this._buildArch(document.getElementById(`${uid}-arch-top`), topArr);

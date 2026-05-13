@@ -209,47 +209,55 @@
           </div>
         </section>
 
-        <!-- Toggle adultos/temporarios -->
-        <div class="dentition-toggle">
-          <button class="toggle-btn active" id="togglePermanente" onclick="switchDentition('permanente')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8 2 4 6 4 10c0 6 8 12 8 12s8-6 8-12c0-4-4-8-8-8z"/></svg>
-            Dentición Permanente (32 piezas)
-          </button>
-          <button class="toggle-btn" id="toggleTemporario" onclick="switchDentition('temporario')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/></svg>
-            Dentición Temporaria (20 piezas)
-          </button>
-        </div>
 
-        <!-- ODONTOGRAMA SVG -->
+
         <section class="card odontogram-card">
-          <div class="arch-label arch-label-top">
-            <span class="arch-side">Superior Derecho</span>
-            <svg class="arch-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <span class="arch-side">Superior Izquierdo</span>
+          <!-- Arcos Permanentes -->
+          <div class="odontogram-section">
+            <h3 class="section-label">Dentición Permanente</h3>
+            
+            <div class="quadrant-labels">
+              <span>Superior Derecho</span>
+              <span>Superior Izquierdo</span>
+            </div>
+
+            <div class="fdi-numbers fdi-top" id="fdiTopNumbers"></div>
+            <div class="dental-arch arch-top" id="archTop"></div>
+            
+            <div class="arch-divider-midline"></div>
+
+            <div class="dental-arch arch-bottom" id="archBottom"></div>
+            <div class="fdi-numbers fdi-bottom" id="fdiBottomNumbers"></div>
+
+            <div class="quadrant-labels">
+              <span>Inferior Derecho</span>
+              <span>Inferior Izquierdo</span>
+            </div>
           </div>
 
-          <!-- Numeración FDI superior -->
-          <div class="fdi-numbers fdi-top" id="fdiTopNumbers"></div>
+          <div class="horizontal-divider"></div>
 
-          <!-- Arco superior -->
-          <div class="dental-arch arch-top" id="archTop"></div>
+          <!-- Arcos Temporarios -->
+          <div class="odontogram-section section-temp">
+            <h3 class="section-label">Dentición Temporaria</h3>
+            
+            <div class="quadrant-labels">
+              <span>Superior Derecho</span>
+              <span>Superior Izquierdo</span>
+            </div>
 
-          <!-- Separador maxilar/mandibular -->
-          <div class="arch-divider">
-            <span>— Línea Intermaxilar —</span>
-          </div>
+            <div class="fdi-numbers fdi-top" id="fdiTempTopNumbers"></div>
+            <div class="dental-arch arch-top" id="archTempTop"></div>
 
-          <!-- Arco inferior -->
-          <div class="dental-arch arch-bottom" id="archBottom"></div>
+            <div class="arch-divider-midline"></div>
 
-          <!-- Numeración FDI inferior -->
-          <div class="fdi-numbers fdi-bottom" id="fdiBottomNumbers"></div>
+            <div class="dental-arch arch-bottom" id="archTempBottom"></div>
+            <div class="fdi-numbers fdi-bottom" id="fdiTempBottomNumbers"></div>
 
-          <div class="arch-label arch-label-bottom">
-            <span class="arch-side">Inferior Derecho</span>
-            <svg class="arch-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <span class="arch-side">Inferior Izquierdo</span>
+            <div class="quadrant-labels">
+              <span>Inferior Derecho</span>
+              <span>Inferior Izquierdo</span>
+            </div>
           </div>
         </section>
 

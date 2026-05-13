@@ -314,8 +314,8 @@ function renderOdontogram() {
 
   // Top arch: topRight + topLeft
   const topTeeth = [...teeth.topRight, ...teeth.topLeft];
-  // Bottom arch: bottomLeft + bottomRight  
-  const bottomTeeth = [...teeth.bottomLeft, ...teeth.bottomRight];
+  // Bottom arch: bottomRight (Q4) + bottomLeft (Q3)
+  const bottomTeeth = [...teeth.bottomRight, ...teeth.bottomLeft];
 
   renderArch('archTop', topTeeth, 'top');
   renderArch('archBottom', bottomTeeth, 'bottom');

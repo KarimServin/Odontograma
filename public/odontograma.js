@@ -18,10 +18,10 @@
 ═══════════════════════════════════════════ */
 
 const PERMANENT_TEETH = {
-  topRight:  [18, 17, 16, 15, 14, 13, 12, 11],   // Cuadrante 1 (superior derecho)
-  topLeft:   [21, 22, 23, 24, 25, 26, 27, 28],   // Cuadrante 2 (superior izquierdo)
-  bottomLeft: [31, 32, 33, 34, 35, 36, 37, 38],  // Cuadrante 3 (inferior izquierdo)
-  bottomRight:[48, 47, 46, 45, 44, 43, 42, 41],  // Cuadrante 4 (inferior derecho)
+  topRight:  [18, 17, 16, 15, 14, 13, 12, 11],   // Cuadrante 1
+  topLeft:   [21, 22, 23, 24, 25, 26, 27, 28],   // Cuadrante 2
+  bottomLeft: [31, 32, 33, 34, 35, 36, 37, 38],  // Cuadrante 3
+  bottomRight:[48, 47, 46, 45, 44, 43, 42, 41],  // Cuadrante 4
 };
 
 const TEMP_TEETH = {
@@ -49,17 +49,17 @@ function getToothName(num) {
     21: 'Incisivo Central SI', 22: 'Incisivo Lateral SI', 23: 'Canino SI',
     24: 'Primer Premolar SI', 25: 'Segundo Premolar SI',
     26: 'Primer Molar SI', 27: 'Segundo Molar SI', 28: 'Tercer Molar SI',
-    31: 'Incisivo Central II', 32: 'Incisivo Lateral II', 33: 'Canino II', // II = Inferior izquierdo
+    31: 'Incisivo Central II', 32: 'Incisivo Lateral II', 33: 'Canino II',
     34: 'Primer Premolar II', 35: 'Segundo Premolar II',
     36: 'Primer Molar II', 37: 'Segundo Molar II', 38: 'Tercer Molar II',
     41: 'Incisivo Central ID', 42: 'Incisivo Lateral ID', 43: 'Canino ID',
     44: 'Primer Premolar ID', 45: 'Segundo Premolar ID',
     46: 'Primer Molar ID', 47: 'Segundo Molar ID', 48: 'Tercer Molar ID',
     // Temporarios
-    51:'Incisivo Central TD SD',52:'Incisivo Lateral TD SD',53:'Canino TD SD',54:'1er Molar TD SD',55:'2do Molar TD SD',
-    61:'Incisivo Central TD SI',62:'Incisivo Lateral TD SI',63:'Canino TD SI',64:'1er Molar TD SI',65:'2do Molar TD SI',
-    71:'Incisivo Central TD II',72:'Incisivo Lateral TD II',73:'Canino TD II',74:'1er Molar TD II',75:'2do Molar TD II',
-    81:'Incisivo Central TD ID',82:'Incisivo Lateral TD ID',83:'Canino TD ID',84:'1er Molar TD ID',85:'2do Molar TD ID',
+    51:'I.C. TD SD',52:'I.L. TD SD',53:'Canino TD SD',54:'1er Molar TD SD',55:'2do Molar TD SD',
+    61:'I.C. TD SI',62:'I.L. TD SI',63:'Canino TD SI',64:'1er Molar TD SI',65:'2do Molar TD SI',
+    71:'I.C. TD II',72:'I.L. TD II',73:'Canino TD II',74:'1er Molar TD II',75:'2do Molar TD II',
+    81:'I.C. TD ID',82:'I.L. TD ID',83:'Canino TD ID',84:'1er Molar TD ID',85:'2do Molar TD ID',
   };
   return names[num] || `Pieza ${num}`;
 }
@@ -112,18 +112,18 @@ function createToothSVG(toothId) {
   // Color helpers
   function fc(face) {
     if (isWhole && state.whole && state.whole !== 'sano') {
-      return TREATMENTS[state.whole]?.color || '#1e3a5f';
+      return TREATMENTS[state.whole]?.color || '#ffffff';
     }
     const t = state[face];
-    if (!t || t === 'sano') return '#1e3a5f';
-    return TREATMENTS[t]?.color || '#1e3a5f';
+    if (!t || t === 'sano') return '#ffffff';
+    return TREATMENTS[t]?.color || '#ffffff';
   }
 
-  const stroke = '#0f2540';
-  const strokeW = 1.2;
+  const stroke = '#444444';
+  const strokeW = 0.8;
   const baseColor = isWhole && state.whole && state.whole !== 'sano'
     ? TREATMENTS[state.whole]?.color
-    : '#1e3a5f';
+    : '#ffffff';
   const isAusente = state.whole === 'ausente';
   const isExtraccion = state.whole === 'extraccion';
   const isImplante = state.whole === 'implante';
@@ -197,8 +197,8 @@ function createToothSVG(toothId) {
     svg.appendChild(c1); svg.appendChild(c2); svg.appendChild(c3);
     const dot = makeEl('circle',{cx:'26',cy:'14',r:'3.5',fill:'#8b5cf6'});
     svg.appendChild(dot);
-    const label = makeEl('text',{x:'26',y:'12','font-size':'5','fill':'#8b5cf6','text-anchor':'middle','font-family':'Inter'});
-    label.textContent='TR.C';
+    const label = makeEl('text',{x:'26',y:'12','font-size':'4.5','fill':'#8b5cf6','text-anchor':'middle','font-family':'Inter'});
+    label.textContent='T.C';
     svg.appendChild(label);
     addToothFaceEvents(svg, toothId, 'whole');
     return svg;
@@ -214,11 +214,11 @@ function createToothSVG(toothId) {
   //   D right triangle: 34,18 → 34,34 → 46,26
 
   const faces = [
-    { id: 'V', tag: 'polygon', points: '18,18 34,18 26,6', face: 'V' },
-    { id: 'L', tag: 'polygon', points: '18,34 34,34 26,46', face: 'L' },
-    { id: 'M', tag: 'polygon', points: '18,18 18,34 6,26',  face: 'M' },
-    { id: 'D', tag: 'polygon', points: '34,18 34,34 46,26', face: 'D' },
-    { id: 'O', tag: 'rect',   x: 18, y: 18, w: 16, h: 16,  face: 'O' },
+    { id: 'V', tag: 'polygon', points: '0,0 52,0 38,14 14,14', face: 'V' },
+    { id: 'L', tag: 'polygon', points: '0,52 52,52 38,38 14,38', face: 'L' },
+    { id: 'M', tag: 'polygon', points: '0,0 0,52 14,38 14,14',  face: 'M' },
+    { id: 'D', tag: 'polygon', points: '52,0 52,52 38,38 38,14', face: 'D' },
+    { id: 'O', tag: 'rect',    x: 14, y: 14, w: 24, h: 24,  face: 'O' },
   ];
 
   faces.forEach(f => {
@@ -250,25 +250,25 @@ function createToothSVG(toothId) {
     svg.appendChild(el);
   });
 
-  // Tooth number label at bottom
+  // Tooth number label - moved out of SVG in some layouts, but here we keep it small
   const lbl = makeEl('text', {
     x: '26', y: '51',
     'font-size': '4.5',
-    fill: '#475569',
+    fill: '#111',
     'text-anchor': 'middle',
-    'font-family': 'JetBrains Mono',
-    'font-weight': '600',
+    'font-family': 'Inter',
+    'font-weight': '700',
     style: 'pointer-events:none'
   });
   lbl.textContent = toothId;
-  svg.appendChild(lbl);
+  // svg.appendChild(lbl); // We'll render numbers outside for better visibility like in photo
 
   // Tooth outline (decorative border)
   const outline = makeEl('rect', {
-    x:1, y:1, width:50, height:50, rx:4,
+    x:0.5, y:0.5, width:51, height:51,
     fill:'none',
-    stroke: '#1a3456',
-    'stroke-width':'0.8',
+    stroke: '#333',
+    'stroke-width':'1',
     style:'pointer-events:none'
   });
   svg.appendChild(outline);
@@ -309,18 +309,24 @@ function addToothFaceEvents(svg, toothId, face) {
 ═══════════════════════════════════════════ */
 
 function renderOdontogram() {
-  const isTemp = currentDentition === 'temporario';
-  const teeth = isTemp ? TEMP_TEETH : PERMANENT_TEETH;
+  // Permanentes
+  const pTopTeeth = [...PERMANENT_TEETH.topRight, ...PERMANENT_TEETH.topLeft];
+  const pBottomTeeth = [...PERMANENT_TEETH.bottomRight, ...PERMANENT_TEETH.bottomLeft];
+  
+  renderArch('archTop', pTopTeeth);
+  renderArch('archBottom', pBottomTeeth);
+  renderFdiNumbers('fdiTopNumbers', pTopTeeth);
+  renderFdiNumbers('fdiBottomNumbers', pBottomTeeth);
 
-  // Top arch: topRight + topLeft
-  const topTeeth = [...teeth.topRight, ...teeth.topLeft];
-  // Bottom arch: bottomLeft + bottomRight  
-  const bottomTeeth = [...teeth.bottomLeft, ...teeth.bottomRight];
+  // Temporarios
+  const tTopTeeth = [...TEMP_TEETH.topRight, ...TEMP_TEETH.topLeft];
+  const tBottomTeeth = [...TEMP_TEETH.bottomRight, ...TEMP_TEETH.bottomLeft];
 
-  renderArch('archTop', topTeeth, 'top');
-  renderArch('archBottom', bottomTeeth, 'bottom');
-  renderFdiNumbers('fdiTopNumbers', topTeeth);
-  renderFdiNumbers('fdiBottomNumbers', bottomTeeth);
+  renderArch('archTempTop', tTopTeeth);
+  renderArch('archTempBottom', tBottomTeeth);
+  renderFdiNumbers('fdiTempTopNumbers', tTopTeeth);
+  renderFdiNumbers('fdiTempBottomNumbers', tBottomTeeth);
+
   updateResumenCard();
 }
 
