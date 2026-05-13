@@ -104,7 +104,9 @@ const TREATMENTS = {
       Center: O (oclusal)
 ═══════════════════════════════════════════ */
 
-function createToothSVG(toothId) {
+function createToothSVG(toothId, mirrored = false) {
+  // mirrored=true for Q1 (topRight) and Q4 (bottomRight):
+  // Mesial toward midline means M is on the RIGHT side in screen coordinates
   const type = getToothType(toothId);
   const state = toothState[toothId] || {};
   const isWhole = state.whole;
@@ -213,12 +215,21 @@ function createToothSVG(toothId) {
   //   M left triangle: 18,18 → 18,34 → 6,26
   //   D right triangle: 34,18 → 34,34 → 46,26
 
-  const faces = [
+  // FDI compliance: M always toward midline.
+  // For Q1/Q4 (mirrored): M is on the RIGHT, D is on the LEFT.
+  // For Q2/Q3 (normal): M is on the LEFT, D is on the RIGHT.
+  const faces = mirrored ? [
     { id: 'V', tag: 'polygon', points: '0,0 52,0 38,14 14,14', face: 'V' },
     { id: 'L', tag: 'polygon', points: '0,52 52,52 38,38 14,38', face: 'L' },
-    { id: 'M', tag: 'polygon', points: '0,0 0,52 14,38 14,14',  face: 'M' },
-    { id: 'D', tag: 'polygon', points: '52,0 52,52 38,38 38,14', face: 'D' },
-    { id: 'O', tag: 'rect',    x: 14, y: 14, w: 24, h: 24,  face: 'O' },
+    { id: 'M', tag: 'polygon', points: '52,0 52,52 38,38 38,14', face: 'M' }, // M=right (toward midline)
+    { id: 'D', tag: 'polygon', points: '0,0 0,52 14,38 14,14',  face: 'D' }, // D=left
+    { id: 'O', tag: 'rect',    x: 14, y: 14, w: 24, h: 24, face: 'O' },
+  ] : [
+    { id: 'V', tag: 'polygon', points: '0,0 52,0 38,14 14,14', face: 'V' },
+    { id: 'L', tag: 'polygon', points: '0,52 52,52 38,38 14,38', face: 'L' },
+    { id: 'M', tag: 'polygon', points: '0,0 0,52 14,38 14,14',  face: 'M' }, // M=left (toward midline)
+    { id: 'D', tag: 'polygon', points: '52,0 52,52 38,38 38,14', face: 'D' }, // D=right
+    { id: 'O', tag: 'rect',    x: 14, y: 14, w: 24, h: 24, face: 'O' },
   ];
 
   faces.forEach(f => {
@@ -309,28 +320,52 @@ function addToothFaceEvents(svg, toothId, face) {
 ═══════════════════════════════════════════ */
 
 function renderOdontogram() {
-  // Permanentes
-  const pTopTeeth = [...PERMANENT_TEETH.topRight, ...PERMANENT_TEETH.topLeft];
-  const pBottomTeeth = [...PERMANENT_TEETH.bottomRight, ...PERMANENT_TEETH.bottomLeft];
-  
-  renderArch('archTop', pTopTeeth);
-  renderArch('archBottom', pBottomTeeth);
+  // FDI: topRight (Q1) and bottomRight (Q4) are 'mirrored' — Mesial is on the right in screen
+  const pRight = [...PERMANENT_TEETH.topRight];
+  const pLeft  = [...PERMANENT_TEETH.topLeft];
+  const pTopTeeth = [...pRight, ...pLeft];
+
+  const pBotRight = [...PERMANENT_TEETH.bottomRight];
+  const pBotLeft  = [...PERMANENT_TEETH.bottomLeft];
+  const pBottomTeeth = [...pBotRight, ...pBotLeft];
+
+  // Render each half separately so we can pass mirrored=true for right-side quadrants
+  renderArch('archTop', pTopTeeth, false);    // rendered contiguous; mirroring handled per-tooth below
+  renderArch('archBottom', pBottomTeeth, false);
   renderFdiNumbers('fdiTopNumbers', pTopTeeth);
   renderFdiNumbers('fdiBottomNumbers', pBottomTeeth);
+
+  // Re-render right-side quadrant teeth with mirrored M/D
+  [...PERMANENT_TEETH.topRight, ...PERMANENT_TEETH.bottomRight].forEach(id => {
+    const wrap = document.getElementById(`tooth-${id}`);
+    if (!wrap) return;
+    const old = wrap.querySelector('.tooth-svg');
+    if (old) old.remove();
+    wrap.insertBefore(createToothSVG(id, true), wrap.firstChild);
+  });
 
   // Temporarios
   const tTopTeeth = [...TEMP_TEETH.topRight, ...TEMP_TEETH.topLeft];
   const tBottomTeeth = [...TEMP_TEETH.bottomRight, ...TEMP_TEETH.bottomLeft];
 
-  renderArch('archTempTop', tTopTeeth);
-  renderArch('archTempBottom', tBottomTeeth);
+  renderArch('archTempTop', tTopTeeth, false);
+  renderArch('archTempBottom', tBottomTeeth, false);
   renderFdiNumbers('fdiTempTopNumbers', tTopTeeth);
   renderFdiNumbers('fdiTempBottomNumbers', tBottomTeeth);
+
+  // Mirror right-side temp quadrants (Q5 and Q8)
+  [...TEMP_TEETH.topRight, ...TEMP_TEETH.bottomRight].forEach(id => {
+    const wrap = document.getElementById(`tooth-${id}`);
+    if (!wrap) return;
+    const old = wrap.querySelector('.tooth-svg');
+    if (old) old.remove();
+    wrap.insertBefore(createToothSVG(id, true), wrap.firstChild);
+  });
 
   updateResumenCard();
 }
 
-function renderArch(containerId, teethArr, position) {
+function renderArch(containerId, teethArr, mirrored = false) {
   const container = document.getElementById(containerId);
   if (!container) return;
   container.innerHTML = '';
@@ -345,7 +380,7 @@ function renderArch(containerId, teethArr, position) {
     if (state?.whole === 'ausente') wrapper.classList.add('ausente');
     if (state?.whole === 'extraccion') wrapper.classList.add('extraccion');
 
-    const svgEl = createToothSVG(toothId);
+    const svgEl = createToothSVG(toothId, mirrored);
     wrapper.appendChild(svgEl);
     container.appendChild(wrapper);
   });
@@ -414,13 +449,24 @@ function refreshTooth(toothId) {
   const wrapper = document.getElementById(`tooth-${toothId}`);
   if (!wrapper) return;
 
+  // Determine if this tooth belongs to a right-side quadrant (Q1, Q4, Q5, Q8)
+  // In FDI: Q1=11-18, Q4=41-48, Q5=51-55, Q8=81-85
+  const id = parseInt(toothId);
+  const rightQuadrants = [
+    ...PERMANENT_TEETH.topRight,
+    ...PERMANENT_TEETH.bottomRight,
+    ...TEMP_TEETH.topRight,
+    ...TEMP_TEETH.bottomRight,
+  ];
+  const mirrored = rightQuadrants.includes(id);
+
   // Remove overlay classes
   wrapper.classList.remove('ausente', 'extraccion');
 
-  // Rebuild SVG
+  // Rebuild SVG with correct M/D orientation
   const oldSvg = wrapper.querySelector('.tooth-svg');
   if (oldSvg) oldSvg.remove();
-  const newSvg = createToothSVG(toothId);
+  const newSvg = createToothSVG(id, mirrored);
   wrapper.insertBefore(newSvg, wrapper.firstChild);
 
   // Re-add classes
