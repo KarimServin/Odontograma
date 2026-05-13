@@ -18,17 +18,17 @@
 ═══════════════════════════════════════════ */
 
 const PERMANENT_TEETH = {
-  topRight:  [18, 17, 16, 15, 14, 13, 12, 11],   // Cuadrante 1 (superior derecho)
-  topLeft:   [21, 22, 23, 24, 25, 26, 27, 28],   // Cuadrante 2 (superior izquierdo)
-  bottomLeft: [31, 32, 33, 34, 35, 36, 37, 38],  // Cuadrante 3 (inferior izquierdo)
-  bottomRight:[48, 47, 46, 45, 44, 43, 42, 41],  // Cuadrante 4 (inferior derecho)
+  topRight: [18, 17, 16, 15, 14, 13, 12, 11],   // Cuadrante 1
+  topLeft: [21, 22, 23, 24, 25, 26, 27, 28],   // Cuadrante 2
+  bottomLeft: [31, 32, 33, 34, 35, 36, 37, 38],  // Cuadrante 3
+  bottomRight: [48, 47, 46, 45, 44, 43, 42, 41],  // Cuadrante 4
 };
 
 const TEMP_TEETH = {
-  topRight:  [55, 54, 53, 52, 51],  // Cuadrante 5
-  topLeft:   [61, 62, 63, 64, 65],  // Cuadrante 6
+  topRight: [55, 54, 53, 52, 51],  // Cuadrante 5
+  topLeft: [61, 62, 63, 64, 65],  // Cuadrante 6
   bottomLeft: [71, 72, 73, 74, 75], // Cuadrante 7
-  bottomRight:[85, 84, 83, 82, 81], // Cuadrante 8
+  bottomRight: [85, 84, 83, 82, 81], // Cuadrante 8
 };
 
 // Tooth type by FDI number
@@ -49,17 +49,17 @@ function getToothName(num) {
     21: 'Incisivo Central SI', 22: 'Incisivo Lateral SI', 23: 'Canino SI',
     24: 'Primer Premolar SI', 25: 'Segundo Premolar SI',
     26: 'Primer Molar SI', 27: 'Segundo Molar SI', 28: 'Tercer Molar SI',
-    31: 'Incisivo Central II', 32: 'Incisivo Lateral II', 33: 'Canino II', // II = Inferior izquierdo
+    31: 'Incisivo Central II', 32: 'Incisivo Lateral II', 33: 'Canino II',
     34: 'Primer Premolar II', 35: 'Segundo Premolar II',
     36: 'Primer Molar II', 37: 'Segundo Molar II', 38: 'Tercer Molar II',
     41: 'Incisivo Central ID', 42: 'Incisivo Lateral ID', 43: 'Canino ID',
     44: 'Primer Premolar ID', 45: 'Segundo Premolar ID',
     46: 'Primer Molar ID', 47: 'Segundo Molar ID', 48: 'Tercer Molar ID',
     // Temporarios
-    51:'Incisivo Central TD SD',52:'Incisivo Lateral TD SD',53:'Canino TD SD',54:'1er Molar TD SD',55:'2do Molar TD SD',
-    61:'Incisivo Central TD SI',62:'Incisivo Lateral TD SI',63:'Canino TD SI',64:'1er Molar TD SI',65:'2do Molar TD SI',
-    71:'Incisivo Central TD II',72:'Incisivo Lateral TD II',73:'Canino TD II',74:'1er Molar TD II',75:'2do Molar TD II',
-    81:'Incisivo Central TD ID',82:'Incisivo Lateral TD ID',83:'Canino TD ID',84:'1er Molar TD ID',85:'2do Molar TD ID',
+    51: 'I.C. TD SD', 52: 'I.L. TD SD', 53: 'Canino TD SD', 54: '1er Molar TD SD', 55: '2do Molar TD SD',
+    61: 'I.C. TD SI', 62: 'I.L. TD SI', 63: 'Canino TD SI', 64: '1er Molar TD SI', 65: '2do Molar TD SI',
+    71: 'I.C. TD II', 72: 'I.L. TD II', 73: 'Canino TD II', 74: '1er Molar TD II', 75: '2do Molar TD II',
+    81: 'I.C. TD ID', 82: 'I.L. TD ID', 83: 'Canino TD ID', 84: '1er Molar TD ID', 85: '2do Molar TD ID',
   };
   return names[num] || `Pieza ${num}`;
 }
@@ -80,16 +80,16 @@ let currentDentition = 'permanente'; // or 'temporario'
 
 // Treatment meta
 const TREATMENTS = {
-  caries:     { label: 'Caries',       color: '#ef4444', code: '02.01', whole: false },
-  obturacion: { label: 'Obturación',   color: '#3b82f6', code: '02.15', whole: false },
-  fractura:   { label: 'Fractura',     color: '#f97316', code: '01.04', whole: false },
-  corona:     { label: 'Corona',       color: '#eab308', code: '04.01.04', whole: true  },
-  endodoncia: { label: 'Endodoncia',   color: '#8b5cf6', code: '03.01',  whole: true  },
-  resina:     { label: 'Resina',       color: '#06b6d4', code: '02.16', whole: false },
-  extraccion: { label: 'Extracción',   color: '#dc2626', code: '10.01', whole: true  },
-  ausente:    { label: 'Ausente',      color: '#6b7280', code: 'AUS',   whole: true  },
-  implante:   { label: 'Implante',     color: '#10b981', code: '11.01', whole: true  },
-  sano:       { label: 'Sano (borrar)',color: '#1e293b', code: '',      whole: false },
+  caries: { label: 'Caries', color: '#ef4444', code: '02.01', whole: false },
+  obturacion: { label: 'Obturación', color: '#3b82f6', code: '02.15', whole: false },
+  fractura: { label: 'Fractura', color: '#f97316', code: '01.04', whole: false },
+  corona: { label: 'Corona', color: '#eab308', code: '04.01.04', whole: true },
+  endodoncia: { label: 'Endodoncia', color: '#8b5cf6', code: '03.01', whole: true },
+  resina: { label: 'Resina', color: '#06b6d4', code: '02.16', whole: false },
+  extraccion: { label: 'Extracción', color: '#dc2626', code: '10.01', whole: true },
+  ausente: { label: 'Ausente', color: '#6b7280', code: 'AUS', whole: true },
+  implante: { label: 'Implante', color: '#10b981', code: '11.01', whole: true },
+  sano: { label: 'Sano (borrar)', color: '#1e293b', code: '', whole: false },
 };
 
 /* ═══════════════════════════════════════════
@@ -104,7 +104,13 @@ const TREATMENTS = {
       Center: O (oclusal)
 ═══════════════════════════════════════════ */
 
-function createToothSVG(toothId) {
+function createToothSVG(toothId, mirrorLR = null, flipVL = null) {
+  const id = parseInt(toothId);
+  const quad = Math.floor(id / 10);
+
+  // FDI quadrants: mirrorLR (M toward midline), flipVL (V toward lips)
+  if (mirrorLR === null) mirrorLR = [1, 4, 5, 8].includes(quad);
+  if (flipVL === null) flipVL = [3, 4, 7, 8].includes(quad);
   const type = getToothType(toothId);
   const state = toothState[toothId] || {};
   const isWhole = state.whole;
@@ -112,18 +118,18 @@ function createToothSVG(toothId) {
   // Color helpers
   function fc(face) {
     if (isWhole && state.whole && state.whole !== 'sano') {
-      return TREATMENTS[state.whole]?.color || '#1e3a5f';
+      return TREATMENTS[state.whole]?.color || '#ffffff';
     }
     const t = state[face];
-    if (!t || t === 'sano') return '#1e3a5f';
-    return TREATMENTS[t]?.color || '#1e3a5f';
+    if (!t || t === 'sano') return '#ffffff';
+    return TREATMENTS[t]?.color || '#ffffff';
   }
 
-  const stroke = '#0f2540';
-  const strokeW = 1.2;
+  const stroke = '#444444';
+  const strokeW = 0.8;
   const baseColor = isWhole && state.whole && state.whole !== 'sano'
     ? TREATMENTS[state.whole]?.color
-    : '#1e3a5f';
+    : '#ffffff';
   const isAusente = state.whole === 'ausente';
   const isExtraccion = state.whole === 'extraccion';
   const isImplante = state.whole === 'implante';
@@ -140,8 +146,8 @@ function createToothSVG(toothId) {
     // Grey fill + X cross
     const rect = makeRect(svg, 4, 4, 44, 44, '#374151', stroke, strokeW, 4, 'whole', toothId);
     svg.appendChild(rect);
-    const l1 = makeEl('line', { x1:10,y1:10,x2:42,y2:42, stroke:'#9ca3af','stroke-width':2.5, 'stroke-linecap':'round' });
-    const l2 = makeEl('line', { x1:42,y1:10,x2:10,y2:42, stroke:'#9ca3af','stroke-width':2.5, 'stroke-linecap':'round' });
+    const l1 = makeEl('line', { x1: 10, y1: 10, x2: 42, y2: 42, stroke: '#9ca3af', 'stroke-width': 2.5, 'stroke-linecap': 'round' });
+    const l2 = makeEl('line', { x1: 42, y1: 10, x2: 10, y2: 42, stroke: '#9ca3af', 'stroke-width': 2.5, 'stroke-linecap': 'round' });
     svg.appendChild(l1); svg.appendChild(l2);
     addToothFaceEvents(svg, toothId, 'whole');
     return svg;
@@ -150,10 +156,10 @@ function createToothSVG(toothId) {
   if (isExtraccion) {
     const rect = makeRect(svg, 4, 4, 44, 44, '#dc2626', stroke, strokeW, 4, 'whole', toothId);
     svg.appendChild(rect);
-    const l1 = makeEl('line', { x1:10,y1:10,x2:42,y2:42, stroke:'white','stroke-width':2.5,'stroke-linecap':'round','opacity':'0.7' });
-    const l2 = makeEl('line', { x1:42,y1:10,x2:10,y2:42, stroke:'white','stroke-width':2.5,'stroke-linecap':'round','opacity':'0.7' });
+    const l1 = makeEl('line', { x1: 10, y1: 10, x2: 42, y2: 42, stroke: 'white', 'stroke-width': 2.5, 'stroke-linecap': 'round', 'opacity': '0.7' });
+    const l2 = makeEl('line', { x1: 42, y1: 10, x2: 10, y2: 42, stroke: 'white', 'stroke-width': 2.5, 'stroke-linecap': 'round', 'opacity': '0.7' });
     svg.appendChild(l1); svg.appendChild(l2);
-    const t = makeEl('text', { x:'26', y:'45', 'font-size':'6', fill:'#fff', 'text-anchor':'middle', 'font-family':'Inter', opacity:'0.7' });
+    const t = makeEl('text', { x: '26', y: '45', 'font-size': '6', fill: '#fff', 'text-anchor': 'middle', 'font-family': 'Inter', opacity: '0.7' });
     t.textContent = 'EXT';
     svg.appendChild(t);
     addToothFaceEvents(svg, toothId, 'whole');
@@ -164,8 +170,8 @@ function createToothSVG(toothId) {
     // Implant: green with bolt icon
     const rect = makeRect(svg, 4, 4, 44, 44, '#10b981', stroke, strokeW, 4, 'whole', toothId);
     svg.appendChild(rect);
-    const circ = makeEl('circle', {cx:'26',cy:'22',r:'8', fill:'white', opacity:'0.3'});
-    const bolt = makeEl('text', {x:'26',y:'44','font-size':'6','fill':'white','text-anchor':'middle','font-family':'Inter', opacity:'0.8'});
+    const circ = makeEl('circle', { cx: '26', cy: '22', r: '8', fill: 'white', opacity: '0.3' });
+    const bolt = makeEl('text', { x: '26', y: '44', 'font-size': '6', 'fill': 'white', 'text-anchor': 'middle', 'font-family': 'Inter', opacity: '0.8' });
     bolt.textContent = 'IMP';
     svg.appendChild(circ); svg.appendChild(bolt);
     addToothFaceEvents(svg, toothId, 'whole');
@@ -177,9 +183,9 @@ function createToothSVG(toothId) {
     const rect = makeRect(svg, 2, 2, 48, 48, '#eab308', stroke, 2.5, 4, 'whole', toothId);
     svg.appendChild(rect);
     // Inner fill
-    const inner = makeEl('rect', {x:'6',y:'6',width:'40',height:'40',rx:'2',fill:'rgba(234,179,8,0.2)'});
+    const inner = makeEl('rect', { x: '6', y: '6', width: '40', height: '40', rx: '2', fill: 'rgba(234,179,8,0.2)' });
     svg.appendChild(inner);
-    const label = makeEl('text', {x:'26',y:'30','font-size':'7','fill':'#eab308','text-anchor':'middle','font-family':'Inter','font-weight':'700'});
+    const label = makeEl('text', { x: '26', y: '30', 'font-size': '7', 'fill': '#eab308', 'text-anchor': 'middle', 'font-family': 'Inter', 'font-weight': '700' });
     label.textContent = 'COR';
     svg.appendChild(label);
     addToothFaceEvents(svg, toothId, 'whole');
@@ -191,14 +197,14 @@ function createToothSVG(toothId) {
     const rect = makeRect(svg, 4, 4, 44, 44, '#1e3a5f', stroke, strokeW, 4, 'whole', toothId);
     svg.appendChild(rect);
     // Canal lines from center down (simplified)
-    const c1 = makeEl('line', {x1:'26',y1:'14',x2:'16',y2:'44',stroke:'#8b5cf6','stroke-width':2.5,'stroke-linecap':'round'});
-    const c2 = makeEl('line', {x1:'26',y1:'14',x2:'26',y2:'44',stroke:'#8b5cf6','stroke-width':2.5,'stroke-linecap':'round'});
-    const c3 = makeEl('line', {x1:'26',y1:'14',x2:'36',y2:'44',stroke:'#8b5cf6','stroke-width':2.5,'stroke-linecap':'round'});
+    const c1 = makeEl('line', { x1: '26', y1: '14', x2: '16', y2: '44', stroke: '#8b5cf6', 'stroke-width': 2.5, 'stroke-linecap': 'round' });
+    const c2 = makeEl('line', { x1: '26', y1: '14', x2: '26', y2: '44', stroke: '#8b5cf6', 'stroke-width': 2.5, 'stroke-linecap': 'round' });
+    const c3 = makeEl('line', { x1: '26', y1: '14', x2: '36', y2: '44', stroke: '#8b5cf6', 'stroke-width': 2.5, 'stroke-linecap': 'round' });
     svg.appendChild(c1); svg.appendChild(c2); svg.appendChild(c3);
-    const dot = makeEl('circle',{cx:'26',cy:'14',r:'3.5',fill:'#8b5cf6'});
+    const dot = makeEl('circle', { cx: '26', cy: '14', r: '3.5', fill: '#8b5cf6' });
     svg.appendChild(dot);
-    const label = makeEl('text',{x:'26',y:'12','font-size':'5','fill':'#8b5cf6','text-anchor':'middle','font-family':'Inter'});
-    label.textContent='TR.C';
+    const label = makeEl('text', { x: '26', y: '12', 'font-size': '4.5', 'fill': '#8b5cf6', 'text-anchor': 'middle', 'font-family': 'Inter' });
+    label.textContent = 'T.C';
     svg.appendChild(label);
     addToothFaceEvents(svg, toothId, 'whole');
     return svg;
@@ -213,12 +219,38 @@ function createToothSVG(toothId) {
   //   M left triangle: 18,18 → 18,34 → 6,26
   //   D right triangle: 34,18 → 34,34 → 46,26
 
+  // FDI compliance: 
+  // 1. M/D: Mesial always toward midline.
+  //    For Q1/Q4/Q5/Q8 (mirrorLR): M is on RIGHT, D is on LEFT.
+  //    For Q2/Q3/Q6/Q7 (normal): M is on LEFT, D is on RIGHT.
+  // 2. V/L: Vestibular toward lips, Lingual toward tongue/palate.
+  //    Upper Arch: V is TOP (y=0), L is BOTTOM (y=52).
+  //    Lower Arch (flipVL): V is BOTTOM (y=52), L is TOP (y=0).
+
+  let vPts, lPts, mPts, dPts;
+
+  if (!flipVL) {
+    vPts = '0,0 52,0 38,14 14,14';     // Top
+    lPts = '0,52 52,52 38,38 14,38';   // Bottom
+  } else {
+    vPts = '0,52 52,52 38,38 14,38';   // Bottom (Vestibular in lower arch)
+    lPts = '0,0 52,0 38,14 14,14';     // Top (Lingual in lower arch)
+  }
+
+  if (!mirrorLR) {
+    mPts = '0,0 0,52 14,38 14,14';     // Left
+    dPts = '52,0 52,52 38,38 38,14';   // Right
+  } else {
+    mPts = '52,0 52,52 38,38 38,14';   // Right
+    dPts = '0,0 0,52 14,38 14,14';     // Left
+  }
+
   const faces = [
-    { id: 'V', tag: 'polygon', points: '18,18 34,18 26,6', face: 'V' },
-    { id: 'L', tag: 'polygon', points: '18,34 34,34 26,46', face: 'L' },
-    { id: 'M', tag: 'polygon', points: '18,18 18,34 6,26',  face: 'M' },
-    { id: 'D', tag: 'polygon', points: '34,18 34,34 46,26', face: 'D' },
-    { id: 'O', tag: 'rect',   x: 18, y: 18, w: 16, h: 16,  face: 'O' },
+    { id: 'V', tag: 'polygon', points: vPts, face: 'V' },
+    { id: 'L', tag: 'polygon', points: lPts, face: 'L' },
+    { id: 'M', tag: 'polygon', points: mPts, face: 'M' },
+    { id: 'D', tag: 'polygon', points: dPts, face: 'D' },
+    { id: 'O', tag: 'rect',    x: 14, y: 14, w: 24, h: 24, face: 'O' },
   ];
 
   faces.forEach(f => {
@@ -250,26 +282,26 @@ function createToothSVG(toothId) {
     svg.appendChild(el);
   });
 
-  // Tooth number label at bottom
+  // Tooth number label - moved out of SVG in some layouts, but here we keep it small
   const lbl = makeEl('text', {
     x: '26', y: '51',
     'font-size': '4.5',
-    fill: '#475569',
+    fill: '#111',
     'text-anchor': 'middle',
-    'font-family': 'JetBrains Mono',
-    'font-weight': '600',
+    'font-family': 'Inter',
+    'font-weight': '700',
     style: 'pointer-events:none'
   });
   lbl.textContent = toothId;
-  svg.appendChild(lbl);
+  // svg.appendChild(lbl); // We'll render numbers outside for better visibility like in photo
 
   // Tooth outline (decorative border)
   const outline = makeEl('rect', {
-    x:1, y:1, width:50, height:50, rx:4,
-    fill:'none',
-    stroke: '#1a3456',
-    'stroke-width':'0.8',
-    style:'pointer-events:none'
+    x: 0.5, y: 0.5, width: 51, height: 51,
+    fill: 'none',
+    stroke: '#333',
+    'stroke-width': '1',
+    style: 'pointer-events:none'
   });
   svg.appendChild(outline);
 
@@ -309,22 +341,28 @@ function addToothFaceEvents(svg, toothId, face) {
 ═══════════════════════════════════════════ */
 
 function renderOdontogram() {
-  const isTemp = currentDentition === 'temporario';
-  const teeth = isTemp ? TEMP_TEETH : PERMANENT_TEETH;
+  // Permanentes
+  const pTopTeeth = [...PERMANENT_TEETH.topRight, ...PERMANENT_TEETH.topLeft];
+  const pBottomTeeth = [...PERMANENT_TEETH.bottomRight, ...PERMANENT_TEETH.bottomLeft];
+  
+  renderArch('archTop', pTopTeeth);
+  renderArch('archBottom', pBottomTeeth);
+  renderFdiNumbers('fdiTopNumbers', pTopTeeth);
+  renderFdiNumbers('fdiBottomNumbers', pBottomTeeth);
 
-  // Top arch: topRight + topLeft
-  const topTeeth = [...teeth.topRight, ...teeth.topLeft];
-  // Bottom arch: bottomRight (Q4) + bottomLeft (Q3)
-  const bottomTeeth = [...teeth.bottomRight, ...teeth.bottomLeft];
+  // Temporarios
+  const tTopTeeth = [...TEMP_TEETH.topRight, ...TEMP_TEETH.topLeft];
+  const tBottomTeeth = [...TEMP_TEETH.bottomRight, ...TEMP_TEETH.bottomLeft];
 
-  renderArch('archTop', topTeeth, 'top');
-  renderArch('archBottom', bottomTeeth, 'bottom');
-  renderFdiNumbers('fdiTopNumbers', topTeeth);
-  renderFdiNumbers('fdiBottomNumbers', bottomTeeth);
+  renderArch('archTempTop', tTopTeeth);
+  renderArch('archTempBottom', tBottomTeeth);
+  renderFdiNumbers('fdiTempTopNumbers', tTopTeeth);
+  renderFdiNumbers('fdiTempBottomNumbers', tBottomTeeth);
+
   updateResumenCard();
 }
 
-function renderArch(containerId, teethArr, position) {
+function renderArch(containerId, teethArr, mirrored = false) {
   const container = document.getElementById(containerId);
   if (!container) return;
   container.innerHTML = '';
@@ -339,7 +377,7 @@ function renderArch(containerId, teethArr, position) {
     if (state?.whole === 'ausente') wrapper.classList.add('ausente');
     if (state?.whole === 'extraccion') wrapper.classList.add('extraccion');
 
-    const svgEl = createToothSVG(toothId);
+    const svgEl = createToothSVG(toothId, mirrored);
     wrapper.appendChild(svgEl);
     container.appendChild(wrapper);
   });
@@ -408,13 +446,24 @@ function refreshTooth(toothId) {
   const wrapper = document.getElementById(`tooth-${toothId}`);
   if (!wrapper) return;
 
+  // Determine if this tooth belongs to a right-side quadrant (Q1, Q4, Q5, Q8)
+  // In FDI: Q1=11-18, Q4=41-48, Q5=51-55, Q8=81-85
+  const id = parseInt(toothId);
+  const rightQuadrants = [
+    ...PERMANENT_TEETH.topRight,
+    ...PERMANENT_TEETH.bottomRight,
+    ...TEMP_TEETH.topRight,
+    ...TEMP_TEETH.bottomRight,
+  ];
+  const mirrored = rightQuadrants.includes(id);
+
   // Remove overlay classes
   wrapper.classList.remove('ausente', 'extraccion');
 
-  // Rebuild SVG
+  // Rebuild SVG with correct M/D orientation
   const oldSvg = wrapper.querySelector('.tooth-svg');
   if (oldSvg) oldSvg.remove();
-  const newSvg = createToothSVG(toothId);
+  const newSvg = createToothSVG(id, mirrored);
   wrapper.insertBefore(newSvg, wrapper.firstChild);
 
   // Re-add classes
@@ -546,7 +595,7 @@ function buildTreatmentList() {
       results.push({ tooth: toothId, treatment: state.whole, faces: null });
     } else {
       const faceMap = {};
-      ['O','M','D','V','L'].forEach(face => {
+      ['O', 'M', 'D', 'V', 'L'].forEach(face => {
         if (state[face] && state[face] !== 'sano') {
           const t = state[face];
           if (!faceMap[t]) faceMap[t] = [];

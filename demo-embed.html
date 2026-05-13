@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demo Embebido — OdontoChart Widget</title>
+  <meta name="description" content="Página de demostración del odontograma embebible para integración en portal existente." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <!-- Solo esto va al <head> del portal del cliente -->
+  <link rel="stylesheet" href="odontograma-embed.css" />
+  <style>
+    /* ── Estilos del portal simulado (NO parte del widget) ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0f1e;
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 0;
+    }
+
+    /* Simulación de portal existente */
+    .portal-topbar {
+      background: #111827;
+      border-bottom: 1px solid #1e3a5f;
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .portal-logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1rem; }
+    .portal-logo svg { width: 28px; height: 28px; color: #3b82f6; }
+    .portal-nav { display: flex; gap: 4px; margin-left: 24px; }
+    .portal-nav a {
+      padding: 6px 14px; border-radius: 6px; font-size: 0.8rem; font-weight: 500;
+      color: #94a3b8; text-decoration: none; transition: all 180ms;
+    }
+    .portal-nav a.active { background: rgba(59,130,246,0.15); color: #3b82f6; }
+    .portal-nav a:hover { color: #e2e8f0; }
+
+    .portal-content { padding: 28px 32px; max-width: 1280px; margin: 0 auto; }
+
+    .demo-header { margin-bottom: 20px; }
+    .demo-header h1 { font-size: 1.2rem; font-weight: 700; margin-bottom: 4px; }
+    .demo-header p  { font-size: 0.82rem; color: #94a3b8; }
+
+    /* Panel lateral con datos del paciente */
+    .page-layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; align-items: start; }
+
+    .side-panel {
+      background: #1a2236;
+      border: 1px solid #1e3a5f;
+      border-radius: 10px;
+      padding: 18px;
+      position: sticky;
+      top: 20px;
+    }
+    .side-title {
+      font-size: 0.72rem; font-weight: 700; color: #94a3b8;
+      text-transform: uppercase; letter-spacing: 0.07em;
+      margin-bottom: 14px;
+    }
+    .side-field { margin-bottom: 12px; }
+    .side-field label { display: block; font-size: 0.65rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+    .side-field input, .side-field select, .side-field textarea {
+      width: 100%; background: #0f1929; border: 1px solid #1e3a5f; border-radius: 7px;
+      padding: 8px 10px; color: #e2e8f0; font-family: 'Inter', sans-serif; font-size: 0.82rem; outline: none;
+      transition: border-color 180ms;
+    }
+    .side-field input:focus, .side-field select:focus, .side-field textarea:focus {
+      border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
+    }
+    .side-field textarea { resize: vertical; min-height: 68px; }
+    .side-field select option { background: #0f1929; }
+
+    .side-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; padding-top: 16px; border-top: 1px solid #1e3a5f; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 9px 14px; border-radius: 7px; border: none; cursor: pointer;
+      font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 600;
+      transition: all 180ms; width: 100%;
+    }
+    .btn svg { width: 14px; height: 14px; }
+    .btn-primary { background: #3b82f6; color: white; }
+    .btn-primary:hover { background: #2563eb; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(59,130,246,0.3); }
+    .btn-ghost { background: transparent; color: #94a3b8; border: 1px solid #1e3a5f; }
+    .btn-ghost:hover { background: rgba(255,255,255,0.04); color: #e2e8f0; }
+
+    /* Output panel */
+    .output-panel {
+      margin-top: 16px;
+      background: #0f1929;
+      border: 1px solid #1e3a5f;
+      border-radius: 7px;
+      padding: 10px 12px;
+      display: none;
+    }
+    .output-panel.visible { display: block; }
+    .output-label { font-size: 0.6rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing:.06em; margin-bottom: 6px; }
+    .output-json {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      color: #94a3b8;
+      white-space: pre-wrap;
+      word-break: break-all;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .output-json .key   { color: #60a5fa; }
+    .output-json .str   { color: #86efac; }
+    .output-json .num   { color: #fbbf24; }
+
+    /* Toast */
+    .demo-toast-area {
+      position: fixed; bottom: 20px; right: 24px;
+      display: flex; flex-direction: column; gap: 8px; z-index: 999;
+    }
+    .demo-toast {
+      background: #111827; border: 1px solid #243555;
+      border-radius: 7px; padding: 11px 15px;
+      font-size: 0.8rem; color: #e2e8f0;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      animation: toastIn 200ms ease;
+      display: flex; align-items: center; gap: 8px;
+    }
+    @keyframes toastIn { from { transform: translateX(24px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    .toast-success { border-color: #10b981; }
+    .toast-success::before { content: '✓'; color: #10b981; font-weight: 700; }
+    .toast-info { border-color: #3b82f6; }
+    .toast-info::before { content: 'ℹ'; color: #3b82f6; font-weight: 700; }
+
+    @media (max-width: 860px) {
+      .page-layout { grid-template-columns: 1fr; }
+      .side-panel { position: static; }
+      .portal-content { padding: 16px; }
+    }
+    @media (max-width: 500px) {
+      .portal-nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PORTAL SIMULADO: barra de navegación del cliente -->
+  <div class="portal-topbar">
+    <div class="portal-logo">
+      <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="16" cy="16" r="14"/>
+        <path d="M10 12C10 8 22 8 22 12C22 16 20 20 16 24C12 20 10 16 10 12Z" fill="currentColor" opacity="0.2" stroke="currentColor"/>
+        <line x1="16" y1="8" x2="16" y2="24" opacity="0.4"/>
+      </svg>
+      Portal Odontológico
+    </div>
+    <nav class="portal-nav">
+      <a href="#">Inicio</a>
+      <a href="#" class="active">Autorizaciones OS</a>
+      <a href="#">Historia Clínica</a>
+      <a href="#">Pacientes</a>
+    </nav>
+  </div>
+
+  <div class="portal-content">
+    <div class="demo-header">
+      <h1>Nueva Solicitud de Autorización — Obra Social</h1>
+      <p>Complete los datos del paciente y marque en el odontograma las piezas y tratamientos a solicitar.</p>
+    </div>
+
+    <div class="page-layout">
+
+      <!-- Panel lateral: datos del paciente y acciones -->
+      <aside class="side-panel">
+        <div class="side-title">Datos del Paciente</div>
+
+        <div class="side-field">
+          <label for="d-nombre">Apellido y Nombre</label>
+          <input type="text" id="d-nombre" placeholder="García, Juan Manuel" />
+        </div>
+        <div class="side-field">
+          <label for="d-dni">DNI</label>
+          <input type="text" id="d-dni" placeholder="28.345.678" />
+        </div>
+        <div class="side-field">
+          <label for="d-os">Obra Social</label>
+          <select id="d-os">
+            <option value="">— Seleccionar —</option>
+            <option>OSDE</option>
+            <option>IOMA</option>
+            <option>PAMI</option>
+            <option>Swiss Medical</option>
+            <option>Galeno</option>
+            <option>Medifé</option>
+            <option>OSPe</option>
+            <option>Sancor Salud</option>
+            <option>Otra</option>
+          </select>
+        </div>
+        <div class="side-field">
+          <label for="d-afiliado">N° Afiliado</label>
+          <input type="text" id="d-afiliado" placeholder="1-123456789-00" />
+        </div>
+        <div class="side-field">
+          <label for="d-plan">Plan</label>
+          <input type="text" id="d-plan" placeholder="310 · 210 · etc." />
+        </div>
+        <div class="side-field">
+          <label for="d-fecha">Fecha</label>
+          <input type="date" id="d-fecha" />
+        </div>
+        <div class="side-field">
+          <label for="d-obs">Observaciones</label>
+          <textarea id="d-obs" placeholder="Indicaciones clínicas, notas..."></textarea>
+        </div>
+
+        <div class="side-actions">
+          <button class="btn btn-primary" onclick="generarJson()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+            Generar Autorización
+          </button>
+          <button class="btn btn-ghost" onclick="limpiarTodo()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+            Limpiar
+          </button>
+          <button class="btn btn-ghost" onclick="window.print()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Imprimir
+          </button>
+        </div>
+
+        <!-- Output JSON del widget (para ver la integración) -->
+        <div class="output-panel" id="outputPanel">
+          <div class="output-label">JSON para el sistema →</div>
+          <pre class="output-json" id="outputJson"></pre>
+        </div>
+      </aside>
+
+      <!-- WIDGET EMBEBIDO ─── Solo esta línea en el portal -->
+      <div id="odontograma-widget"></div>
+
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="demo-toast-area" id="toastArea"></div>
+
+  <!-- ══════════════════════════════════════════════════
+       INTEGRACIÓN DEL WIDGET (lo que va en el portal)
+       Solo estas dos líneas al final del <body>:
+  ══════════════════════════════════════════════════ -->
+  <script src="odontograma-embed.js"></script>
+  <script>
+    // Inicialización del widget en el portal
+    const odontoWidget = new OdontoWidget({
+      container: '#odontograma-widget',
+      defaultTool: 'caries',
+      dentition: 'permanente',
+      onChange: (state) => {
+        // Callback en tiempo real — reporta al portal los cambios
+        // console.log('Cambió:', state.treatments.length, 'tratamientos');
+      },
+    });
+
+    // Fecha de hoy
+    document.getElementById('d-fecha').value = new Date().toISOString().split('T')[0];
+
+    // ── Funciones del portal ──
+
+    function generarJson() {
+      const odState = odontoWidget.getState();
+      if (!odState.treatments || odState.treatments.length === 0) {
+        mostrarToast('Marque al menos una pieza en el odontograma', 'info');
+        return;
+      }
+
+      const payload = {
+        paciente: {
+          nombre:   document.getElementById('d-nombre').value || null,
+          dni:      document.getElementById('d-dni').value    || null,
+          obraSocial: document.getElementById('d-os').value  || null,
+          nroAfiliado: document.getElementById('d-afiliado').value || null,
+          plan:     document.getElementById('d-plan').value  || null,
+          fecha:    document.getElementById('d-fecha').value || null,
+          observaciones: document.getElementById('d-obs').value || null,
+        },
+        odontograma: odState,
+        generadoEn: new Date().toISOString(),
+      };
+
+      // Mostrar el JSON formateado
+      document.getElementById('outputJson').textContent = JSON.stringify(payload, null, 2);
+      document.getElementById('outputPanel').classList.add('visible');
+
+      mostrarToast('Autorización generada — JSON listo para enviar a la OS', 'success');
+
+      // En el portal real, aquí iría:
+      // fetch('/api/autorizaciones', { method:'POST', body: JSON.stringify(payload), headers:{'Content-Type':'application/json'} })
+    }
+
+    function limpiarTodo() {
+      if (!confirm('¿Limpiar el odontograma y los datos?')) return;
+      odontoWidget.clear();
+      ['d-nombre','d-dni','d-os','d-afiliado','d-plan','d-obs'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      document.getElementById('d-fecha').value = new Date().toISOString().split('T')[0];
+      document.getElementById('outputPanel').classList.remove('visible');
+      mostrarToast('Odontograma reiniciado', 'info');
+    }
+
+    function mostrarToast(msg, type = 'info') {
+      const area = document.getElementById('toastArea');
+      const t = document.createElement('div');
+      t.className = `demo-toast toast-${type}`;
+      t.textContent = msg;
+      area.appendChild(t);
+      setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity 300ms'; setTimeout(()=>t.remove(), 300); }, 3500);
+    }
+  </script>
+</body>
+</html>

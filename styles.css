@@ -10,12 +10,12 @@
   --border: #e2e8f0;
   --border-focus: #3b82f6;
 
-  --primary: #2563eb;
-  --primary-light: #eff6ff;
-  --primary-hover: #1d4ed8;
-  --danger: #dc2626;
-  --success: #16a34a;
-  --warning: #d97706;
+  --primary: #00796b;
+  --primary-light: #e0f2f1;
+  --primary-hover: #00695c;
+  --danger: #d32f2f;
+  --success: #2e7d32;
+  --warning: #f57c00;
 
   --text: #111827;
   --text-secondary: #6b7280;
@@ -384,47 +384,94 @@ body {
 .fdi-numbers {
   display: flex;
   justify-content: center;
-  gap: 2px;
-  padding: 2px 0;
+  gap: 0;
+  padding: 4px 0;
   min-width: max-content;
   margin: 0 auto;
+  height: 24px;
+  align-items: center;
 }
 .fdi-num {
-  width: 50px;
+  width: 52px;
   text-align: center;
-  font-size: 0.62rem;
-  font-weight: 600;
-  color: var(--text-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #333;
   transition: color var(--t);
   font-variant-numeric: tabular-nums;
+  font-family: 'Inter', sans-serif;
 }
 .fdi-num.highlighted { color: var(--primary); }
 
 .dental-arch {
   display: flex;
   justify-content: center;
-  gap: 2px;
+  gap: 0;
   padding: 4px 0;
   min-width: max-content;
   margin: 0 auto;
 }
 
-.arch-divider {
-  text-align: center;
-  padding: 8px 0;
-  font-size: 0.62rem;
-  color: var(--text-muted);
-  letter-spacing: 0.1em;
+.arch-divider-midline {
+  height: 1px;
+  background: #bbb;
+  margin: 16px auto;
+  width: 100%;
   position: relative;
 }
-.arch-divider::before, .arch-divider::after {
+.arch-divider-midline::after {
   content: '';
   position: absolute;
-  top: 50%; width: 30%;
-  height: 1px; background: var(--border);
+  left: 50%;
+  top: -100px;
+  bottom: -100px;
+  width: 2px;
+  background: #ccc;
+  transform: translateX(-50%);
+  z-index: 1;
+  pointer-events: none;
 }
-.arch-divider::before { left: 0; }
-.arch-divider::after { right: 0; }
+
+.horizontal-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 32px 0;
+}
+
+.odontogram-section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.section-label {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 24px;
+}
+
+.quadrant-labels {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 40px;
+  margin-bottom: 8px;
+  margin-top: 8px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.section-temp {
+  transform: scale(0.9);
+  margin-top: -20px;
+}
 
 /* ── TOOTH SVG CONTAINER ── */
 .tooth-wrapper {
@@ -456,7 +503,7 @@ body {
 .face-extraccion { fill: var(--c-extraccion) !important; }
 .face-ausente    { fill: var(--c-ausente) !important; opacity: 0.4 !important; }
 .face-implante   { fill: var(--c-implante) !important; }
-.face-sano       { fill: #e5e7eb !important; }
+.face-sano       { fill: #ffffff !important; }
 
 /* Ausente / extraccion overlay */
 .tooth-wrapper.ausente::after,
