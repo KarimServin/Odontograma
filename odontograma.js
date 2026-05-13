@@ -377,7 +377,7 @@ function renderArch(containerId, teethArr, mirrored = false) {
     if (state?.whole === 'ausente') wrapper.classList.add('ausente');
     if (state?.whole === 'extraccion') wrapper.classList.add('extraccion');
 
-    const svgEl = createToothSVG(toothId, mirrored);
+    const svgEl = createToothSVG(toothId);
     wrapper.appendChild(svgEl);
     container.appendChild(wrapper);
   });
@@ -463,7 +463,7 @@ function refreshTooth(toothId) {
   // Rebuild SVG with correct M/D orientation
   const oldSvg = wrapper.querySelector('.tooth-svg');
   if (oldSvg) oldSvg.remove();
-  const newSvg = createToothSVG(id, mirrored);
+  const newSvg = createToothSVG(id);
   wrapper.insertBefore(newSvg, wrapper.firstChild);
 
   // Re-add classes
